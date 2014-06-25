@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<program xmlns="http://www.kinoma.com/kpr/1">
+
+    <require id="TMP102" path="TMP102" />
+    <require id="HardwarepinsModule" path="HardwarepinsModule" />
+
+    <container id="MainContainer" top="0" left="0" bottom="0" right="0">
+        <skin color="white"/>
+        <label left="0" right="0" name="temperature" string="'- - -'">
+           <style font="36px Arial bold" color="black"/>
+           <behavior>
+               <method id="handleTemperatureChanged" params="content, temp">
+                   <![CDATA[
+                      content.string = temp.celsius.toFixed( 1 ) + "°C" + " / " + temp.fahrenheit.toFixed( 1 ) + "°F";
+                   ]]>
+               </method>
+           </behavior>
+        </label>
+    </container>
+
+    <script>
+        <![CDATA[
+            // create a new temperature sensor object instance
+            var tmp102 = new TMP102.TMP102( 27, 29 );
+            
+            // create the main container and add it to the application
+            application.add( new MainContainer() );
+            
+            // initialize the sensor and start polling
+            tmp102.init();
+            tmp102.poll( 100, HardwarepinsModule.MILLISECONDS, "/tmp102/value" );
+        ]]>
+    </script>
+    
+    <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- Handler that is called when the temperature state has changed -->
+    <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <handler path="/tmp102/value">
+       <behavior>
+          <method id="onInvoke" params="content, message">
+             <![CDATA[
+                var data = message.requestObject;
+
+                if( data != null )
+                    application.distribute( "handleTemperatureChanged", data );
+             ]]>
+          </method>
+       </behavior>
+    </handler>
+    
+</program>

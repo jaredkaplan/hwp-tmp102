@@ -1,0 +1,88 @@
+<!--
+  Copyright 2011-2014 Marvell Semiconductor, Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<module xmlns="http://www.kinoma.com/kpr/1">
+
+    <require id="HardwarepinsModule" path="HardwarepinsModule" />
+
+    <variable id="DEFAULT_ADDR" value="0x48" />
+
+    <!-- +++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- TMP102 Temperature Sensor module implementation -->
+    <!-- +++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <class id="TMP102" like="HardwarepinsModule.I2C">
+        <constructor params="sda, scl, addr, config">
+            <![CDATA[
+                HardwarepinsModule.I2C.call( this, sda, scl, addr || DEFAULT_ADDR, config );
+            ]]>
+        </constructor>
+        <method id="createHardwarepinsSimulator">
+            <![CDATA[
+                return new TMP102SimulatorInterface();
+            ]]>
+        </method>
+        <method id="init" params="callback">
+            <![CDATA[
+                this.run( "TMP102Scripts", "tmp102_bll_init", null, callback );
+            ]]>
+        </method>
+        <method id="get" params="callback">
+            <![CDATA[
+                this.run( "TMP102Scripts", "tmp102_bll_get", null, callback );
+            ]]>
+        </method>
+        <method id="poll" params="time, units, callback, skipFirst">
+            <![CDATA[
+                this.repeat( "TMP102Scripts", "tmp102_bll_poll", null, time, units, skipFirst, callback );
+            ]]>
+        </method>
+    </class>
+
+    <!-- +++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- TMP102 Temperature Sensor simulator interface -->
+    <!-- +++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <variable id="TMP102_SIMULATOR_ID" value="'TMP102'" />
+
+    <class id="TMP102SimulatorInterface" like="HardwarepinsModule.SimulatorInterface">
+        <method id="getSimulatorId">
+            <![CDATA[
+                return TMP102_SIMULATOR_ID;
+            ]]>
+        </method>
+        <method id="getSimulatorModule">
+            <![CDATA[
+                return mergeURI( module.uri, "TMP102Simulator" );
+            ]]>
+        </method>
+        <method id="tmp102_bll_init" params="query, parameters, invoker">
+            <![CDATA[
+                this.sendHardwarepinsEvent( "init", query, parameters, invoker );
+            ]]>
+        </method>
+        <method id="tmp102_bll_get" params="query, parameters, invoker">
+            <![CDATA[
+                this.sendHardwarepinsEvent( "get", query, parameters, invoker );
+            ]]>
+        </method>
+        <method id="tmp102_bll_poll" params="query, parameters, invoker">
+            <![CDATA[
+                this.sendHardwarepinsEvent( "poll", query, parameters, invoker );
+            ]]>
+        </method>
+    </class>
+
+</module>

@@ -1,0 +1,105 @@
+<!--
+  Copyright 2011-2014 Marvell Semiconductor, Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<module xmlns="http://www.kinoma.com/kpr/1">
+
+    <require id="HardwarepinsSimulator" path="kdt/simulator/HardwarepinsSimulator" />
+    <require id="PartSimulators" path="kdt/simulator/PartSimulators" />
+    <require id="HardwarepinsModule" path="HardwarepinsModule" />
+    <require id="TMP102" path="TMP102" />
+    <require id="TMP102Scripts" path="TMP102Scripts" />
+
+    <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- Function called by the HardwarepinsSimulatorDeviceBehavior  -->
+    <!-- when a simulator interface is registered. The data returned -->
+    <!-- is used to create a new parts simulator part in the device  -->
+    <!-- simulator UI.                                               -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+
+    <function id="createHardwarepinsSimulatorPartData" params="config, id">
+        <![CDATA[
+            var data = null;
+            
+            // create part data for a GPIO.Button simulator
+            if( id == TMP102.TMP102_SIMULATOR_ID )
+                data = createTMP102SimulatorPartData( config );
+                
+            return data;
+        ]]>
+    </function>
+
+    <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- Simulator implementation for TMP102 hardwarepins module -->
+    <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <function id="createTMP102SimulatorPartData" params="config">
+        <![CDATA[
+            var data = {
+                id : TMP102.TMP102_SIMULATOR_ID,
+                behavior: TMP102SimulatorPartBehavior,
+                header : { 
+                    label : (config != null && "label" in config) ? config.label : "TMP102", name : "Temperature Sensor", iconVariant : PartSimulators.SENSOR_KNOB 
+                },
+                axes : [
+                    new PartSimulators.FloatAxisDescription(
+                        {
+                            ioType : "input",
+                            dataType : "float",
+                            valueLabel : "Value",
+                            valueID : "value",
+                            minValue : 0,
+                            maxValue : 1,
+                            value : 0.5,                                                 
+                            speed : 5
+                        }
+                    )
+                ]
+            };
+            
+            return data;
+        ]]>
+    </function>
+
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- TMP102SimulatorPartBehavior class - behavior for the input simulator -->
+    <!-- part container created by the hardwarepins device simulator.         -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <behavior id="TMP102SimulatorPartBehavior" like="HardwarepinsSimulator.DefaultPartBehavior">
+        <method id="createInputResult" params="content, parameters">
+            <![CDATA[
+                var value = content.delegate( "getValue" );
+                var result = null;
+                
+                if( value != null )
+                {
+	                var celcius = -55 + (value.value * 182);
+	                var sensorValue = 0;
+	                
+	                if( celcius > 0 )
+	                    sensorValue = celcius / 0.0625;
+	                    
+	                else if( celcius < 0 )
+	                    sensorValue = ~(Math.abs( celcius ) / 0.0625) + 1;
+                    
+                    result = TMP102Scripts.createTMP102Result( sensorValue );
+                }
+                
+                return result;        
+            ]]>
+        </method>
+    </behavior>
+
+</module>
