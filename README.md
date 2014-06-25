@@ -1,9 +1,9 @@
 TMP102 Hardwarepins Library
 ===========================
 
-This library provides an interface to the TI-TMP102 I2C temperature sensor:
+This library provides an interface to the TMP102 I2C temperature sensor.
 
-http://www.ti.com/product/TMP102/description
+* [Product information and data sheet](http://www.ti.com/product/TMP102/description)
 
 Getting Started
 ---------------
@@ -95,5 +95,5 @@ The units parameter must be one of the following string literal values:
 When the TMP102 object's callback handler is invoked, the result will be passed in the message requestObject property. The temperature will be passed in a data structure as a raw sensor value, and also converted to celsius and fahrenheit. The structure of the result object will be as follows:
 
 ```javascript
-{ "raw":342, "celsius":21.375, "fahrenheit":70.475 }
+{ raw:342, celsius:21.375, fahrenheit:70.475 }
 ```
