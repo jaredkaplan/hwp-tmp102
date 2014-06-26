@@ -51,8 +51,9 @@
         <![CDATA[
             i2c.setSlave( parameters.addr );       
 
-			var msb = i2c.readByteDataSMB( 0x0 );
-			var lsb = i2c.readByteDataSMB( 0x1 );
+			var raw_data = i2c.readWordDataSMB();
+			var msb = raw_data & 0xFF;
+			var lsb = raw_data >> 8;
 			var value = (msb << 4) | (lsb >> 4);
             
             return createTMP102Result( value );
