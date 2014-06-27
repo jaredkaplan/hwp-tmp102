@@ -24,21 +24,21 @@
             var result = new Object();
 
             result.raw = value;
-			
-			if( value & 0x800 )
-			{
-			    value -= 1;
-			    value = ~value & 0xFFF;
-			    
-			    result.celsius = value * -0.0625;
-			    result.fahrenheit = (value * -0.1125) + 32;  
-			}
-			else
-			{
+
+            if( value & 0x800 )
+            {
+                value -= 1;
+                value = ~value & 0xFFF;
+
+                result.celsius = value * -0.0625;
+                result.fahrenheit = (value * -0.1125) + 32;  
+            }
+            else
+            {
                 result.celsius = value * 0.0625;
                 result.fahrenheit = (value * 0.1125) + 32;
-			}
-            
+            }
+
             return result;
         ]]>
     </function>
@@ -51,11 +51,11 @@
         <![CDATA[
             i2c.setSlave( parameters.addr );       
 
-			var raw_data = i2c.readWordDataSMB();
-			var msb = raw_data & 0xFF;
-			var lsb = raw_data >> 8;
-			var value = (msb << 4) | (lsb >> 4);
-            
+            var raw_data = i2c.readWordDataSMB();
+            var msb = raw_data & 0xFF;
+            var lsb = raw_data >> 8;
+            var value = (msb << 4) | (lsb >> 4);
+
             return createTMP102Result( value );
         ]]>
     </function>

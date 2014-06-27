@@ -22,16 +22,16 @@
         <![CDATA[
             // create a new temperature sensor object instance
             var tmp102 = new TMP102.TMP102( 27, 29 );
-            
+
             // create the main container and add it to the application
             application.add( new MainContainer() );
-            
+
             // initialize the sensor and start polling
             tmp102.init();
             tmp102.poll( 100, HardwarepinsModule.MILLISECONDS, "/tmp102/value" );
         ]]>
     </script>
-    
+
     <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     <!-- Handler that is called when the temperature state has changed -->
     <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -48,5 +48,5 @@
           </method>
        </behavior>
     </handler>
-    
+
 </program>
