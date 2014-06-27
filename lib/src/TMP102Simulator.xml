@@ -32,7 +32,7 @@
         <![CDATA[
             var data = null;
 
-            // create part data for a GPIO.Button simulator
+            // create part data for a TMP102 simulator
             if( id == TMP102.TMP102_SIMULATOR_ID )
                 data = createTMP102SimulatorPartData( config );
 
