@@ -82,15 +82,15 @@ To continuously poll the temperature from the sensor, you must specify the polli
 tmp102.poll( time, units, callback, skipFirst );
 ```
 
-The units parameter must be one of the following string literal values:
-
-* milliseconds
-* seconds
-* minutes
-* microseconds
-* nanoseconds
-* hours
-* days
+>The units parameter must be one of the following string literal values:
+>
+>* milliseconds
+>* seconds
+>* minutes
+>* microseconds
+>* nanoseconds
+>* hours
+>* days
 
 When the TMP102 object's callback handler is invoked, the result will be passed in the message requestObject property. The temperature will be passed in a data structure as a raw sensor value, and also converted to celsius and fahrenheit. The structure of the result object will be as follows:
 
