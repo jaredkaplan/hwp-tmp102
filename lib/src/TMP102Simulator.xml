@@ -50,7 +50,7 @@
                 id : TMP102.TMP102_SIMULATOR_ID,
                 behavior: TMP102SimulatorPartBehavior,
                 header : { 
-                    label : (config != null && "label" in config) ? config.label : "TMP102", name : "Temperature Sensor", iconVariant : PartSimulators.SENSOR_KNOB 
+                    label : (config != null && "label" in config) ? config.label : "TMP102", name : "Temperature Sensor", iconVariant : PartSimulators.SENSOR_TEMPERATURE 
                 },
                 axes : [
                     new PartSimulators.FloatAxisDescription(
